@@ -1,5 +1,6 @@
 # ✔ 웹팩(기본)
 > - http://jeonghwan-kim.github.io/series/2019/12/10/frontend-dev-env-webpack-basic.html
+> - [웹팩 공식 문서](https://webpack.js.org/concepts/)
 ## ✌ 과거의 경우
 - html에 파일 두개를 올려서 다른 파일에 있는 함수를 사용했었다.
 <pre>
@@ -170,7 +171,8 @@ return content.replace('console.log(','alert(');
 - 처리해야될 파일의 패턴을 명시하고 이 패턴에 걸리는 파일들은 `use`에 설정한 로더함수를 돌리도록 한다.
 
 ### 🔸 자주 사용하는 대표적인 로더
-### 🌂 css-loader
+> - [loader 공식 문서](https://webpack.js.org/loaders/)
+### 🌂 [css-loader](https://webpack.js.org/loaders/css-loader/)
 - 자바스크립트에서 css 파일을 모듈로 불러올 수 있게 해준다.
 - es6의 import 구문으로 가져오려면 css 파일이 모듈이 되어야만 하는데 웹팩의 로더가 이 css 파일을 모듈로 바꾸는 역할을 한다.
 - 만약 로더를 사용하지 않은채 `import './app.css';` 하면 오류가 난다. (`Module parse failed`)
@@ -197,7 +199,7 @@ $ npm i css-loader
     - html 코드가 DOM이라는 모습으로 변환이 되어야 브라우저에서 문서가 보이듯이 css 코드도 CSSOM(CSS 객체 모델)으로 바뀌어야만 브라우저에서 모습을 들어낸다.
     - 이렇게 하려면 HTML 파일에서 css 코드를 직접 불러오거나 아니면 인라인 스크립트로 넣어주어야 하는데 아직 그런 처리를 하지 않고 이 자바스크립트 파일에만 CSS 코드가 있어서 브라우저에서 나타나지 않는다.
     - 그래서 나온 것이 **style-loader**이다.
-### 🌂 style-loader
+### 🌂 [style-loader](https://webpack.js.org/loaders/style-loader/)
 
 - **style-loader**는 자바스크립트로 변경된 style 코드를 HTML에 넣어주는 loader 이다.
 - css코드를 모듈로 사용하고 웹팩으로 번들링하려면 `css-loader`와 `style-loader`를 같이 사용해야 한다.
@@ -273,7 +275,7 @@ $ npm i file-loader
 
 ![img](./img/9.PNG)
 
-### 🌂 url-loader
+### 🌂 [url-loader](https://webpack.js.org/loaders/url-loader/)
 - 사용하는 이미지 개수가 많아지면 네트웍 리소스를 사요하는 부담이 있고 사이트 성능에도 영향을 줄 수 있다.
 - 한 페이지에서 작은 이미지를 여러개 사용한다면 [Data URI Scheme](https://en.wikipedia.org/wiki/Data_URI_scheme)을 이용하는 방법이 더 낫다.
 - `url-loader`라는 것은 `Data URI Scheme`처럼 이미지를 base64로 인코딩하여 문자열 형태로 소스코드에 넣는 형식이다.
