@@ -1,5 +1,10 @@
 const path = require("path");
-const MyWebpackPlugin = require('./my-webpack-plugin');
+// const MyWebpackPlugin = require('./my-webpack-plugin');
+const webpack = require('webpack');
+// node 모듈중에 child process는 터미널 명령어를 실행할 수 있다.
+const childProcess = require('child_process');
+// html Webpack Plugin
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: "development",
@@ -32,7 +37,7 @@ module.exports = {
         options:{ // 로더에 대한 옵션
           // file-loader 처리하는 파일을 모듈로 사용했을 때 그 경로 앞에 추가되는 문자열이다. (아웃풋 경로가 dist로 설정되어 있다.)
           // 파일을 호출할 때 앞에 dist를 붙치고 호출하게 된다.
-          publicPath:'./dist/',
+          //publicPath:'./dist/',
           // file-loader  파일 아웃풋으로 복사 할 때 사용하는 파일의 이름을 설정한다.
           // [원본 파일명].[확장자 명]
           // 캐시 무력화를 위해서 쿼리 스트링으로 매번 달라진 해시값을 입력한다.
@@ -43,6 +48,26 @@ module.exports = {
     ]
   },
   plugins:[
-    new MyWebpackPlugin()
+    // 커스텀 플러그인
+    // new MyWebpackPlugin()
+    // BannerPlugin
+    new webpack.BannerPlugin({
+      banner: `
+        Build Date: ${new Date().toLocaleString()}
+        Commit Version: ${childProcess.execSync('git rev-parse --short HEAD')}
+        Author: ${childProcess.execSync('git config user.name')}
+        Author-Email: ${childProcess.execSync('git config user.email')}
+        `
+    }),
+    new webpack.DefinePlugin({
+      TWO : '1+1',
+      'api.domain' : JSON.stringify('http://dev.api.domain.com')
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      templateParameters: {
+        env: process.env.NODE_ENV === 'development' ? '(개발용)' : ''
+      }
+    })
   ]
 };

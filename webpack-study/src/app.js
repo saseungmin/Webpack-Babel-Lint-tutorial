@@ -12,3 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <img src="${woowa}" />
     `
 })
+
+console.log(process.env.NODE_ENV);
+console.log(TWO) // 2
+console.log(api.domain)
