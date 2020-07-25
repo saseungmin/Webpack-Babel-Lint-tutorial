@@ -302,3 +302,41 @@ $ npm i url-loader
 - `./dist/main.js`에 확인해보면 80kb 보다 작은 파일은 main.js에 적혀있는것을 확인할 수 있다.
 
 ![url](./img/10.PNG)
+
+
+## ✌ 플러그인
+- 로더가 각 파일 단위로 처리했던 반먼 플러그인은 번들된 결과물 하나를 처리한다.
+- 자바스크립트 코드를 난독화 한다거나 특정 텍스트 용도로 사용한다.
+### 🔸 커스텀 플러그인 만들기
+- [Writing a plugin](https://webpack.js.org/contribute/writing-a-plugin/)
+- 로더는 함수로 정의했던거와는 다르게 플러그인은 클래스로 정의한다.
+- `my-webpack-plugin.js` 생성
+<pre>
+class MyWebpackPlugin {
+    apply(compiler){ // apply 생성 후 compiler라는 객체를 주입해준다.
+        compiler.hooks.done.tap('My Webpack Plugin',stats =>{
+            console.log('My Webpack Plugin : done'); // 플러그인이 완료 됬을 때 실행되는 콜백 함수
+        })
+    }
+}
+
+module.exports = MyWebpackPlugin;
+</pre>
+- `webpack.config.js`에 추가
+    - 로더는 `module` 객체에다가 추가하는 방식이라면 플러그인은 `plugins` 배열에 추가한다.
+<pre>
+  plugins:[
+    // 클래스 객체 생성
+    new MyWebpackPlugin() 
+  ]
+</pre>
+- 설정 후 `npm run build`를 하면 콘솔창에 `My webpack Plugin : done` 메시지를 확인할 수 있다.
+- 로더가 소스에 있는 여러 개의 파일에 대해서 각각 실행했다면, 플러그인은 파일들을 하나로 뭉처놓은 번들파일에 대해서 딱 한번 실행된다.
+#### ❓ 어떻게 플러그인이 번들된 파일에 접근할 수 있을까?
+- 웹팩 내장 플러그인 [`BannerPlugin`](https://webpack.js.org/plugins/banner-plugin/) 참고
+- `my-webpack-plugin.js` 주석 참고
+- `npm run build` 하고 난 뒤 `./dist/main.js`를 확인하면 맨 상단에 주석이 적힌 것을 확인할 수 있다.
+
+![plugin](./img/11.PNG)
+
+- 이렇듯 웹팩의 로더는 모듈로 연결되어 있는 각 파일들을 처리하고 파일을 하나로 만들어주는데 만들어주기 직전에 플러그인이 중간에 개입해서 아웃풋으로 만들어질 번들링에 후처리를 해준다.
