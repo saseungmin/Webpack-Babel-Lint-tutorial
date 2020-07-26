@@ -460,3 +460,76 @@ new HtmlWebpackPlugin({
 - 설정 후 `NODE_ENV=development npm run build`를 해주면 `dist/index.html`의 title에 `(개발용)`이라는 것이 붙여진걸 확인할 수 있다.
 - 브라우저에서도 확인이 가능하다.
 - 이런식으로 개발환경과 배포환경의 확연히게 구분할 수 있어 휴먼에러를 줄일 수 있다.
+- 또한, `minify`옵션에 `collapseWhitespace`는 빈칸을 제거하는 옵션이고, `removeComments`는 주석을 제거하는 옵션으로 한줄로 주석없이 빌드된 `dist/index.html`을 볼 수 있다.
+<pre>
+// 배포환경에서만
+minify: process.env.NODE_ENV === 'production' ? {
+  collapseWhitespace: true,
+  removeComments: true,
+} : false
+</pre>
+
+### 🔸 [CleanWebpackPlugin](https://github.com/johnagan/clean-webpack-plugin)
+- 기본 플러그인이 아니기때문에 따로 설치를 해야한다.
+- 빌드 이전 결과물을 제거해주는 플러그인이다.
+- 빌드 결과물은 아웃풋 경로에 모이는데 과거 파일이 남아 있을 수 있다.
+- `CleanWebpackPlugin`을 사용하면 빌드 결과를 싹 날리고 새로 저장된다.
+<pre>
+$ npm i clean-webpack-plugin
+</pre>
+- `webpack.config.js`의 `plugin`에 `CleanWebpackPlugin`을 추가시켜준다.
+<pre>
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+...
+plugins:[
+  ...
+  new CleanWebpackPlugin()
+]
+</pre>
+- 설정한 뒤 `dist/`폴더에 중복되지 않은 파일을 하나 생성한 뒤 `npm run build`를 하면 삭제되는 것을 확인할 수 있다.
+
+### 🔸 [MiniCssExtractPlugin](https://webpack.js.org/plugins/mini-css-extract-plugin/)
+- 스타일시트가 점점 많아지면 하나의 자바스크립ㅂ트 결과물로 만드는 것이 부담일 수 있다.
+    - 브라우저에서 큰 파일하나를 로딩하는 것이 성능에 영향을 줄 수 있다.
+- 때문에 번들 결과에서 스타일시트 코드만 따로 뽑아서 별도의 CSS파일로 만들어 역할에 따라 파일을 분리하는 것이 좋다.
+    - 브라우저에서 큰 파일 하나를 내려받는 것 보다, 여러 개의 작은 파일을 동시에 다운로드하는 것이 더 빠르다.
+- `MiniCssExtractPlugin`은 javascript파일에서 CSS파일을 별도 뽑아내는 플러그인이다.
+- 웹팩에서 지원하지 않는 써드파티 패키지이므로 설치가 필요하다.
+<pre>
+$ npm i mini-css-extract-plugin
+</pre>
+- `webpack.config.js`파일의 `plugin`에 `MiniCssExtractPlugin` 추가
+<pre>
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+...
+plugins:[
+  // ... 배포환경일때만
+    ...(process.env.NODE_ENV === 'production' 
+      ? [new MiniCssExtractPlugin({filename: '[name].css',})] 
+      : []
+    )
+]
+</pre>
+- 또한 다른 플러그인들과 다르게 `MiniCssExtractPlugin`는 로더 설정을 해주어야 한다.
+- `MiniCssExtractPlugin` 사용할려면 `'style-loader'`,`'css-loader'` 대신에 자체적으로 제공하는 로더를 쓰는 것이 좋다.
+    - 때문에 노드 환경 변수에 따라 다르게 세팅하는 것이 좋다.
+<pre>
+// loader 부분
+{
+  test: /\.css$/,
+  use:[
+    // 배포환경일때만 MiniCssExtractPlugin.loader 사용하고 개발환경에선 style-loader를 사용한다.
+    process.env.NODE_ENV === 'production' 
+    ? MiniCssExtractPlugin.loader
+    : 'style-loader',
+    'css-loader'
+  ]
+},
+</pre>
+- 설정 후 `NODE_ENV=production npm run build` 
+- 윈도우에서는 안되기 때문에 `cross-env` 설치 해주어야 한다.
+<pre>
+$ npm i -g cross-env && npm i cross-env
+$ cross-env NODE_ENV=production npm run build
+</pre>
+- 이렇게 실행 후 `dist` 폴더에 보면 `main.css` 파일이 생성되고 `index.html`에는 main.css가 link되어있는 것을 확인할 수 있다.

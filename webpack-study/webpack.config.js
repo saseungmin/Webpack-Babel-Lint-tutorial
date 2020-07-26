@@ -5,6 +5,10 @@ const webpack = require('webpack');
 const childProcess = require('child_process');
 // html Webpack Plugin
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+// clean webpack plugin
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// mini css extract plugin
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: "development",
@@ -26,8 +30,9 @@ module.exports = {
       {
         test: /\.css$/,
         use:[
-           // 웹팩은 엔트리 포인트부터 시작해서 연결된 모든 모듈을 검색하여 css-loader를 찾는다.
-          'style-loader',
+          process.env.NODE_ENV === 'production' 
+          ? MiniCssExtractPlugin.loader
+          : 'style-loader',
           'css-loader'
         ]
       },
@@ -67,7 +72,16 @@ module.exports = {
       template: './src/index.html',
       templateParameters: {
         env: process.env.NODE_ENV === 'development' ? '(개발용)' : ''
-      }
-    })
+      },
+      minify: process.env.NODE_ENV === 'production' ? {
+        collapseWhitespace: true, // 빈칸 제거
+        removeComments: true, // 주석 제거
+      } : false
+    }),
+    new CleanWebpackPlugin(),
+    ...(process.env.NODE_ENV === 'production' 
+      ? [new MiniCssExtractPlugin({filename: '[name].css',})] 
+      : []
+    ),
   ]
 };

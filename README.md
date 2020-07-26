@@ -12,3 +12,5 @@
 - BannerPlugin
 - DefinePlugin
 - HtmlTemplatePlugin
+- CleanWebpackPlugin
+- MiniCssExtractPlugin
