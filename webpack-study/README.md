@@ -567,5 +567,105 @@ $ npx babel app.js
 
 ### 🔸 플러그인(변환을 담당)
 #### 🌈 커스텀 플러그인
-- `my-babel-plugin.js`에 작성
+- `my-babel-plugin.js`에 작성 후 실행하면 `app.js`가 파싱이 일어난게 콘솔에 찍힌다.
+<pre>
+$ npx babel app.js --plugins './my-babel-plugin.js' 
+> Identifier() name :  alert
+> Identifier() name :  msg
+> Identifier() name :  window
+> Identifier() name :  alert
+> Identifier() name :  msg
+> const alert = msg => window.alert(msg);
+</pre>
+- `my-babel-plugin.js`의 변환 작업
+<pre>
+// 변환작업 : 코드 문자열을 역순으로 변환한다.
+path.node.name = name.split('').reverse().join('');
+// 다시 실행하면 역순으로 뒤집힌것을 볼 수 있다.
+$ npx babel app.js --plugins './my-babel-plugin.js'
+...
+> const trela = gsm => wodniw.trela(gsm);
+</pre>
+- `my-babel-plugin.js` 수정하여 ES6문법 const를 ES5 var로 변환시킨다.
+<pre>
+// const면 var로 치환해버린다.
+VariableDeclaration(path){
+    console.log('VariableDeclaration() kind: ', path.node.kind); // const
+    // const => var ES5로 변환
+    if(path.node.kind === 'const'){
+        path.node.kind = 'var'
+    }
+}
+</pre>
+- babel 실행
+<pre>
+$ npx babel app.js --plugins './my-babel-plugin.js'
+> VariableDeclaration() kind:  const
+> var alert = msg => window.alert(msg);
+</pre>
 
+#### 🌈 플러그인 사용하기
+- 커스텀 플러그인과 같이 이러한 결과를 만드는 것이 [`block-scoping`](https://babeljs.io/docs/en/babel-plugin-transform-block-scoping) 플러그인이고, 실제 바벨에서 제공하는 플러그인이다.
+- `const`, `let` 처럼 블록 스코핑을 따르는 예약어를 함수 스코핑을 사용하는 `var` 변경한다.
+- `@babel/plugin-transform-block-scoping` 패키지 설치
+<pre>
+$ npm i @babel/plugin-transform-block-scoping
+</pre>
+- babel 실행
+<pre>
+$ npx babel app.js --plugins @babel/plugin-transform-block-scoping 
+> var alert = msg => window.alert(msg);
+</pre>
+- 콘솔에 확인해보면 커스텀 플러그인 결과와 똑같이 `const`가 `var`로 변환된것을 확인할 수 있다.
+- app.js에 있는 함수는 `const`에서 `var`로 변환되서 ex에서 실행이 가능하지만, arrow 함수는 explorer에서 또한 실행되지 않는다.
+- 그렇기 때문에 [`@babel/plugin-transform-arrow-functions`](https://babeljs.io/docs/en/babel-plugin-transform-arrow-functions) 패키지를 사욯해 변환시켜준다.
+<pre>
+$ npm i @babel/plugin-transform-arrow-functions
+</pre>
+- babel 실행 후 확인해보면 arrow 함수가 일반 함수로 바뀌었다.
+<pre>
+$ npx babel app.js --plugins @babel/plugin-transform-block-scoping --plugins @babel/plugin-transform-arrow-functions
+// 실행 결과
+var alert = function (msg) {
+  return window.alert(msg);
+};
+</pre>
+
+- ESMAScripts5에서부터 지원하는 엄격 모드를 사용하는 것이 안전하기 때문에 `"use strict"` 구문을 추가하는 것이 좋다.
+- 이러한 구문을 넣어주는 바벨이 [strict-mode](https://babeljs.io/docs/en/babel-plugin-transform-strict-mode) 플러그인이다.
+<pre>
+$ npm i @babel/plugin-transform-strict-mode
+</pre>
+- babel 실행 후 콘솔을 확인해보면 `"use strict"` 가 붙어있는 것을 확인할 수 있다.
+<pre>
+$ npx babel app.js --plugins @babel/plugin-transform-block-scoping --plugins @babel/plugin-transform-arrow-functions --plugins @babel/plugin-transform-strict-mode
+// 실행 결과
+"use strict";
+
+var alert = function (msg) {
+  return window.alert(msg);
+};
+</pre>
+
+- 플러그인이 많아지면 많아질수록 콘솔에 적을 명령어들이 많아진다.
+- 그렇기 때문에 웹팩 설정 파일인 `webpack.config.js`를 기본 설정파일로 사용하듯 바벨도 `babel.config.js`를 사용한다.
+- `babel.config.js`에 콘솔에 적은 바벨들을 plugins 배열에 적어준다.
+<pre>
+module.exports = {
+    plugins: [
+        "@babel/plugin-transform-block-scoping",
+        "@babel/plugin-transform-arrow-functions",
+        "@babel/plugin-transform-strict-mode"
+    ]
+}
+</pre>
+- 작성한 뒤 babel 실행 plugins 옵션을 사용하지 않고 실행하도 기본적으로 `babel.config.js` 설정파일이 잡혀있기 때문에 알아서 plugins를 적용하고 결과를 출력해준다.
+<pre>
+$ npx babel app.js
+// 실행 결과
+"use strict";
+
+var alert = function (msg) {
+  return window.alert(msg);
+};
+</pre>
