@@ -533,3 +533,39 @@ $ npm i -g cross-env && npm i cross-env
 $ cross-env NODE_ENV=production npm run build
 </pre>
 - 이렇게 실행 후 `dist` 폴더에 보면 `main.css` 파일이 생성되고 `index.html`에는 main.css가 link되어있는 것을 확인할 수 있다.
+
+## ✌ 바벨(babel)
+
+### 🔸 크로스 브라우징
+- 브라우저에서 사용하는 언어가 조금씩 다르다. 따라서 프론트엔드 코드는 일관적이지 못할 때가 많다.
+- 여전히 인터넷 익스플로러는 프라미스를 이해하지 못한다.
+- 이렇듯 크로스브라우징의 혼란을 해결해 줄 수 있는 것이 바벨이다.
+- **ECMAScript2015+로 작성한 코드를 모든 브라우저에서 일관되게 동작하도록 호환성을 지켜준다.**
+- 타입스크립트, JSX처럼 다른 언어로 분류되는 것도 포함한다.
+
+### 🔸 바벨의 기본 동작
+- 바벨 설치
+<pre>
+$ npm i @babel/core @babel/cli
+</pre>
+- 프로젝트 루트 디렉토리에 `app.js` 생성
+<pre>
+const alert = msg => window.alert(msg);
+</pre>
+- npx로 실행할시 바로 실행할 수 있다.
+<pre>
+$ npx babel app.js
+// 작성한 결과가 나온다.
+> const alert = msg => window.alert(msg);
+</pre>
+- 바벨이 코드를 변환하는 작업을 빌드라고 하는데 세 단계로 빌드를 진행한다.
+  1. 파싱(Parsing) : 코드를 받아서 각 토큰별로 분해한다.(const, alert 이런식으로 분해)
+  2. 변환(Transforming) : ES6로 되어있는 코드를 ES5로 변환
+  3. 출력(Printing) : 변환된 결과를 출력
+
+- 결과상에는 코드가 변환되지 않았다.
+
+### 🔸 플러그인(변환을 담당)
+#### 🌈 커스텀 플러그인
+- `my-babel-plugin.js`에 작성
+
