@@ -22,3 +22,9 @@
     - @babel/plugin-transform-arrow-functions
     - @babel/plugin-transform-strict-mode
 - 프리셋
+    - @babel/preset-env
+- env 프리셋 설정과 폴리필
+    - 타겟 브라우저
+    - 폴리필(core.js)
+- 웹팩으로 통합
+    - babel-loader

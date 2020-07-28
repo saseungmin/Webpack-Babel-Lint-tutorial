@@ -13,7 +13,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
   mode: "development",
   entry: { // 시작점
-    main: "./src/app.js",
+    main: "./app.js",
   },
   output: { // 두가지 인자가 온다
     path: path.resolve("./dist"), // 아웃풋 디렉토리 명을 입력한다.(절대경로)
@@ -49,6 +49,11 @@ module.exports = {
           name: '[name].[ext]?[hash]' ,
           limit: 80000, // 8kb 파일 크기를 설정할 수 있다.
         }
+      },
+      {
+        test: /\.js$/, // .js로 끝나는 파일
+        loader: 'babel-loader',
+        exclude: /node-modules/, // node-modules에 있는 .js 파일들은 제외시킨다.
       }
     ]
   },

@@ -535,6 +535,8 @@ $ cross-env NODE_ENV=production npm run build
 - 이렇게 실행 후 `dist` 폴더에 보면 `main.css` 파일이 생성되고 `index.html`에는 main.css가 link되어있는 것을 확인할 수 있다.
 
 ## ✌ 바벨(babel)
+- 바벨이란 일관적인 방식으로 코딩하면서, 다양한 브라우저에서 돌아가는 애플리케이션을 만들기 위한 도구이다.
+- 바벨의 코어는 파싱과 출력만 담당하고 변환작업은 플러그인이 처리한다.
 
 ### 🔸 크로스 브라우징
 - 브라우저에서 사용하는 언어가 조금씩 다르다. 따라서 프론트엔드 코드는 일관적이지 못할 때가 많다.
@@ -707,3 +709,156 @@ var alert = function (msg) {
   return window.alert(msg);
 };
 </pre>
+
+#### 🌈 프리셋 사용하기
+- 바벨은 목적에 따라 프리셋을 제공한다.
+- 이렇게 사용하는 것이 실무에서 많이 사용한다.
+
+> - preset-env : ECMAScript5+를 변환할 때 사용한다.
+> - preset-flow : flow를 변환하기 위한 프리셋이다.
+> - preset-react : react를 변환하기 위한 프리셋이다.
+> - preset-typescript : typescript를 변환하기 위한 프리셋이다.
+
+#### ✌️ preset-env
+- 인터넷 익스플로러 지원을 위해 `env` 프리셋을 사용한다.
+- 패키지를 설치한다
+<pre>
+$ npm i @babel/preset-env
+</pre>
+- `babel.config.js`에 `@babel/preset-env`를 `presets`에 설정해준다.
+<pre>
+module.exports = {
+    presets: [
+        '@babel/preset-env'
+    ]
+}
+</pre>
+- 설정 후 `npx babel app.js ` 빌드하면 같은 결과가 나오는 것을 확인할 수 있다.
+<pre>
+// 빌드 결과
+"use strict";
+
+var alert = function (msg) {
+  return window.alert(msg);
+};
+</pre>
+
+
+### 🔸 env 프리셋 설정과 폴리필
+####  🌈 타겟 브라우저
+- 프리셋을 설정할 때 특정 브라우저를 지원해야되야 만하는 설정흘 할 수 있다.
+- `target` 옵션에 브라우저 버전명만 지정하면 `env`프리셋은 이에 맞는플러그인들을 찾아 최적의 코드를 출력해 낸다.
+- `babel.config.js`를 수정한다
+<pre>
+module.exports = {
+    presets: [
+        // 첫 번째 인자는 프리셋 이름을 정하고, 두 번째 인자는 target 옵션 객체 인자를 전달한다.
+        ['@babel/preset-env', {
+            targets: {
+                chrome: '79' // chrome 79 에서 실행되는 코드로 변환.
+            }
+        }]
+    ]
+}
+</pre>
+- 설정 후 `npx babel app.js ` 빌드하면 같은 결과를 확인하면 위와 다르게 엄격 모드는 되어있지만, ECMAScript5+ 언어로 되어있다.
+- chrome 79에서는 `const`와 `arrow function`언어를 이해하고 있기 바벨 프리셋이 굳이 변환시키지 않았다.
+- [`CanIUse`](https://caniuse.com/) 사이트에서 브라우저 호환성을 볼 수 있다.
+- 두 가지 이상의 브라우저에서 지원을 해야한다면 `target` 옵션에 브라우저명과 버전명을 적어준다.
+- 이 경우 두가지 브라우저에서 동작이 가능한 상태로 바벨 프리셋이 변환시켜준다.
+<pre>
+module.exports = {
+    presets: [
+        ['@babel/preset-env', {
+            targets: {
+                chrome: '79', 
+                ie: '11'
+            }
+        }]
+    ]
+}
+</pre>
+
+
+####  🌈 폴리필(polyfill)
+- `app.js` 수정
+<pre>
+// ES6 문법
+new Promise();
+</pre>
+- 수정한 후 `npx babel app.js`를 하면 ES6 문법인데도 불구하고 변환이 되지 않았다.
+- 이렇게 되면 IE에서 `promise` 문법을 해석하지 못하고 에러를 던진다.
+<pre>
+"use strict";
+
+new Promise();
+</pre> 
+
+- **바벨은 ECMAScript5+를 ECMAScript5 버전으로 변환할 수 있는 것만 빌드한다.**
+- 그렇기 때문에 그렇지 못한 것들은 **폴리필**이라고 부르는 부분조각을 추가해서 해결한다.
+- `Promise`는 ECMAScript5버전으로 대체할 수 없다. 다만 구현할 수는 있다.([core.js-폴리필](https://www.npmjs.com/package/core-js))
+- `env`프리셋은 폴리필을 지정할 수 있는 옵션을 제공한다.
+<pre>
+// babel.config.js
+module.exports = {
+    presets: [
+        ['@babel/preset-env', {
+            targets: {
+                chrome: '79', 
+                ie: '11'
+            },
+            useBuiltIns: 'usage', // 'entry' false
+            corejs: {
+                version: 2 //최신버전 3
+            }
+        }]
+    ]
+}
+</pre>
+
+- 설정 후 `npx babel app.js` 빌드 후 결과를 보면 여전히 `new Promise()`를 사용하고 있지만 `require` 함수가 동작하였다.
+- 이런 방식으로 `Promise`를 IE에서 사용할 수 있다.
+<pre>
+"use strict";
+
+require("core-js/modules/es6.promise");
+
+require("core-js/modules/es6.object.to-string");
+
+new Promise();
+</pre>
+
+### 🔸 웹팩으로 통합
+- 실무 환경에서는 바벨을 직접 사용하는 것보다는 웹팩을 통합해서 사용하는 것이 일반적이다.
+- 로더 형태로 제공하는데 [`babel-loader`](https://github.com/babel/babel-loader) 가 그것이다.
+- `babel-loader` 패키지를 설치한다.
+<pre>
+$ npm i babel-loader
+</pre>
+- `webpack.config.js`에 `babel-loader`를 추가시켜준다.
+- `node-modules`에도 .js 파일이 존재하기 때문에 `exclude`옵션을 사용하여 제외시켜준다.
+<pre>
+module:{
+    rules:[
+      ...
+      {
+        test: /\.js$/, // .js로 끝나는 파일
+        loader: 'babel-loader',
+        exclude: /node-modules/, // node-modules에 있는 .js 파일들은 제외시킨다.
+      }
+    ]
+}
+</pre>
+- 엔트리를 변경해준다.
+<pre>
+  entry: {
+    main: "./app.js",
+  }
+</pre>
+- 이 상태에서 `npm run build`를 하면 위에서 `Promise`프리셋 작업에서 `app.js`에 `require`함수가 같이 호출됬었다.
+- 이 때문에 생성된 `require` 함수가 `node-modules`에서 `core-js`를 찾을려고 하는데 `node-modules`에는 존재하지 않기 때문에 에러가 발생한다.
+- `core-js` 패키지 설치
+<pre>
+$ npm i core-js@2 // @는 특정 버전을 설치할 수 있다.
+</pre>
+- 그 후 다시 `npm run build` 실행시 정상적으로 빌드된 것을 확인할 수 있다.
