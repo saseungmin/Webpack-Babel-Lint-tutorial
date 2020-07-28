@@ -669,3 +669,41 @@ var alert = function (msg) {
   return window.alert(msg);
 };
 </pre>
+
+- 하지만 이 경우도 하나하나 일일히 plugin을 설정할려면 너무 많아지기 때문에 **프리셋**을 사용한다.
+
+### 🔸 프리셋
+- 위처럼 코드를 한줄만 작성하였는데도 불구하고 plugins에 3개의 plugin이 설정되어 있다.
+- 목적에 맞게 여러가지 플러그인을 세트로 모아놓은 것을 **프리셋**이라고 한다.
+
+#### 🌈 커스텀 프리셋
+- 위에서 사용한 3개의 플러그인을 하나의 프리셋으로 만든다.
+- 아래의 형태가 플러그인을 모아놓은 하나의 세트이다.
+<pre>
+module.exports = function myBabelPreset(){
+    return{
+        plugins: [
+            "@babel/plugin-transform-block-scoping",
+            "@babel/plugin-transform-arrow-functions",
+            "@babel/plugin-transform-strict-mode"
+        ]
+    }
+}
+</pre>
+- `babel.config.js`에 설정된 `plugins`대신 `presets`라는 배열로 `my-babel.preset.js`의 `plugin`들을 불러온다.
+<pre>
+module.exports = {
+    presets: [
+        './my-babel-preset.js'
+    ]
+}
+</pre>
+- 설정 후 `npx babel app.js ` 빌드하면 같은 결과가 나오는 것을 확인할 수 있다.
+<pre>
+// 빌드 결과
+"use strict";
+
+var alert = function (msg) {
+  return window.alert(msg);
+};
+</pre>

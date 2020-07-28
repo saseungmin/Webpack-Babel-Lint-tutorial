@@ -14,3 +14,11 @@
 - HtmlTemplatePlugin
 - CleanWebpackPlugin
 - MiniCssExtractPlugin
+#### 🌈 babel
+- @babel/core 
+- @babel/cli
+- 바벨 플러그인
+    - @babel/plugin-transform-block-scoping
+    - @babel/plugin-transform-arrow-functions
+    - @babel/plugin-transform-strict-mode
+- 프리셋
