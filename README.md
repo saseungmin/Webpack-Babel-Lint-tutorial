@@ -6,6 +6,7 @@
 #### 🌈 loader
 - css-loader
 - style-loader
+- sass-loader
 - file-loader
 - url-loader
 #### 🌈 plugin

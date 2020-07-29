@@ -13,7 +13,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
   mode: "development",
   entry: { // 시작점
-    main: "./app.js",
+    main: "./src/app.js",
   },
   output: { // 두가지 인자가 온다
     path: path.resolve("./dist"), // 아웃풋 디렉토리 명을 입력한다.(절대경로)
@@ -28,12 +28,13 @@ module.exports = {
       //   ] 
       // }
       {
-        test: /\.css$/,
+        test: /\.(scss|css)$/,
         use:[
           process.env.NODE_ENV === 'production' 
           ? MiniCssExtractPlugin.loader
           : 'style-loader',
-          'css-loader'
+          'css-loader',
+          'sass-loader'
         ]
       },
       {
