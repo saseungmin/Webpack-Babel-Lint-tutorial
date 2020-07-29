@@ -29,3 +29,5 @@
     - 폴리필(core.js)
 - 웹팩으로 통합
     - babel-loader
+#### 🌈 Lint
+- ESLint
