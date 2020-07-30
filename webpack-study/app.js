@@ -2,5 +2,7 @@
 
 //new Promise();
 
+var foo = "";
+
 console.log();
-(function() {})();
+//(function() {})();

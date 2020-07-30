@@ -126,3 +126,91 @@ module.exports = {
     }
 };
 </pre>
+
+- `package.json` 의 `script` 부분을 수정해주어 간단하게 명령어로 동작시킬 수 있다.
+<pre>
+  "scripts": {
+    ...
+    "lint": "eslint src --fix"
+  },
+</pre>
+
+
+### 🔸Prettier
+- 프리티어는 좀 더 일관적인 스타일로 코드를 다듬는다.
+- 반면 코드 품질과 관련된 기능은 하지 않는 것이 ESLint와 다른 점이다.
+- `prettier` 패키지 설치
+<pre>
+$ npm i prettier
+</pre>
+- `npx prettier app.js`를 실행해 보면 세미콜론이 붙은 채 실행되 되었다.
+<pre>
+$ npx prettier app.js
+console.log()
+// 결과
+console.log();
+</pre>
+- 파일 자체를 변경하고 싶으면 `--write` 옵션을 붙여준다.
+<pre>
+$ npx prettier app.js --write
+</pre>
+- 프리티어의 강점은 ESLint가 고칠 수 없는 그래서 개발자에게 고치라고 던져주는 코드도 프리티어가 자동으로 고쳐준다.
+- 좀 더 읽기 쉬운 형태로 변형해준다.
+- ESLint와 prettier를 같이 사용하고 싶다면 하나로 통합해서 사용할 수 있는 방법이 존재한다.
+
+#### 🌈 통합 방법
+- 포맷팅은 프리티어에게 맡기더라도 코드 품질과 관련된 검사는 ESLint가 해주어야 한다.
+- 프리티어는 이러한 ESLint와 통합 방법을 제공한다.
+- [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier)는 프리티어와 충돌하는 ESLint 규칙을 끄는 역할을 한다.
+- `eslint-config-prettier` 패키지 설치
+<pre>
+$ npm i eslint-config-prettier
+</pre>
+- `.eslintrc.js`의 `extends`에 추가해준다.
+- `eslint:recommended`에 해당하는 규칙들 중에 `prettier`와 겹치는게 존재하면 꺼버리는 설정이다.
+<pre>
+module.exports = {
+    ...
+    "extends": ["eslint:recommended",'eslint-config-prettier'],
+    ...
+};
+</pre>
+- 이 방법도 매번 `eslint`와 `prettier`를 번갈아 가며 사용하는 것은 불편한 방법이다.
+- [`eslint-plugin-prettier`](https://github.com/prettier/eslint-plugin-prettier) 방법은 프리티어의 모든 규칙을 ESLint의 규칙으로 추가하는 플러그인이다.
+- 때문에 프리티어의 모든 규칙이 ESLint로 들어오기 때문에 ESLint만 실행하면 된다.
+- `eslint-plugin-prettier` 패키지 설치
+<pre>
+$ npm i eslint-plugin-prettier
+</pre>
+- `rules`에는 프리티어 규칙을 위반하면 에러를 반환하도록 설정해준다.
+- `plugins`에는 `["prettier"]`을 추가시켜준다.
+<pre>
+module.exports = {
+  ...
+  plugins: ["prettier"],
+  rules: {
+    "prettier/prettier": "error",
+  },
+};
+</pre>
+- 다른 방법으론 `extends`에 `plugin`을 추가시킨다.
+<pre>
+extends: ["eslint:recommended", "plugin:prettier/recommended"]
+</pre>
+- `app.js`를 변경
+<pre>
+// eslint 가 변환
+var foo = '';
+// prettier가 변환
+console.log();;;;
+</pre>
+- `npx eslint app.js --fix` 실행
+- 사용하지 않는 변수에 대해서 에러를 리포팅한다.
+
+![ing](./img/23.PNG)
+<pre>
+// 결과
+var foo = "";
+
+console.log();
+</pre>

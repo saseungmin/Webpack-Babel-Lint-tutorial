@@ -29,5 +29,6 @@
     - 폴리필(core.js)
 - 웹팩으로 통합
     - babel-loader
-#### 🌈 Lint
+### ✌ [Lint](https://github.com/saseungmin/Webpack-Babel-Lint-tutorial/blob/master/webpack-study/Lint.md)
 - ESLint
+- Prettier
