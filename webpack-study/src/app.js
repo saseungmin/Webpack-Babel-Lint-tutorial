@@ -5,15 +5,15 @@
 
 // --loader
 //import './app.css';
-import './app.scss';
-import woowa from './woowa.PNG';
+import "./app.css";
+import woowa from "./woowa.PNG";
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.body.innerHTML = `
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.innerHTML = `
         <img src="${woowa}" />
-    `
-})
+    `;
+});
 
 console.log(process.env.NODE_ENV);
-console.log(TWO) // 2
-console.log(api.domain)
+console.log(TWO); // 2
+console.log(api.domain);

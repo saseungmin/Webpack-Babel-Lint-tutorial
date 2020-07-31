@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "lint": "eslint src --fix"
+    "lint": "eslint src --fix",
+    "start": "webpack-dev-server"
   },
   "author": "seungmin",
   "license": "ISC",
@@ -38,11 +39,12 @@
     "sass": "^1.26.10",
     "sass-loader": "^9.0.2",
     "style-loader": "^1.2.1",
-    "url-loader": "^4.1.0"
+    "url-loader": "^4.1.0",
+    "webpack-dev-server": "^3.11.0"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "echo \"이것은 커밋전에 출력됨\""
     }
   },
   "lint-staged": {
