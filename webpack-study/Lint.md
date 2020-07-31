@@ -214,3 +214,103 @@ var foo = "";
 
 console.log();
 </pre>
+
+### 🔸자동화
+- 린트는 코딩을 할 떄마다 수시로 실행해야하는데 이러한 일은 자동화 하는 것이 좋다.
+
+### 🌈 변경한 내용만 검사
+- 소스 트래킹 도구로 깃을 사용한다면 **깃 훅**을 이용하는 것이 좋다.
+- 커밋 전, 푸시 전 등 깃 커맨드 실행 시점에 끼여들수 있는 훅을 제공한다.
+- 만약 린트에 통과하지 못하면 푸시나 커밋을 막고 통과해야만 푸시나 커밋을 허용한다.
+- [`husky`](https://github.com/typicode/husky)는 깃 훅을 쉽게 사용할 수 있는 도구이다.
+<pre>
+$ npm i husky
+</pre>
+- `package.json`에 `husky`를 추가하면 커밋전에 메시지가 출력된다.
+<pre>
+  "husky": {
+    "hooks": {
+      "pre-commit": "echo \"이것은 커밋전에 출력됨\""
+    }
+  }
+</pre>
+- git으로 빈 커밋을 한다.
+<pre>
+$ git commit --allow-empty -m "sample commit"
+// 출력 결과
+husky > pre-commit (node v12.16.3)
+이것은 커밋전에 출력됨
+[master 8430d48] sample commit
+</pre>
+- 이렇게 `pre-commit`을 사용하여 lint를 실행하여 검사한다.
+<pre>
+// app.js
+var foo = "";;;;
+
+console.log()
+// package.json
+  "husky": {
+    "hooks": {
+      "pre-commit": <b>"eslint app.js --fix"</b>
+    }
+  }
+</pre>
+- 그후 깃 커밋을 하면 커밋 전 `eslint`가 실행되어서 코드가 변경이 된다.
+- `var foo = "";`를 사용하지 않았기 때문에 에러를 반환해 커밋에 실패하게 된다.
+<pre>
+$ git commit --allow-empty -m "sample commit"
+// 실행 결과
+husky > pre-commit (node v12.16.3)
+
+C:\Users\seung\Webpack-Babel-Lint-study\webpack-study\app.js
+  5:5  error  'foo' is assigned a value but never used  no-unused-vars
+
+✖ 1 problem (1 error, 0 warnings)
+
+husky > pre-commit hook failed (add --no-verify to bypass)
+// app.js
+var foo = "";
+
+console.log();
+</pre>
+- `var foo = "";`를 주석을 달고 커밋을 하면 정상적으로 커밋이 된다.
+<pre>
+$ git commit --allow-empty -m "sample commit"
+husky > pre-commit (node v12.16.3)
+[master 4033533] sample commit
+</pre>
+
+- 관리하는 소스가 많아지게 되면 린트 실행이 느려질 수 있다.
+- 그래서 좀 더 최적화할 수 있는 방법으로 깃으로 커밋할 때 커밋한 파일만 린트를 돌리면 좀 더 린트 시간이 줄어들게 된다.
+- 그 역할을 해주는 것이 `lint-staged` 이다.
+<pre>
+$ npm i lint-staged
+</pre>
+- `package.json`에 `lint-staged`를 추가해준다.
+<pre>
+  "husky": {
+    "hooks": {
+      "pre-commit": <b>"lint-staged"</b>
+    }
+  },
+  "lint-staged": {
+    // 모든 js확장자를 가진 파일중에서 stage된 파일이 있으면 린트를 돌린다.
+    "*.js": "eslint --fix"
+  }
+</pre>
+
+- 이렇게 자동화를 해야지 일관되게 코드를 유지할 수 있다.
+
+### 🌈 에디터 확장도구
+- 코딩할 때 실시간으로 검사하는 방법도 있다.
+- vs-code의 eslint와 prettier 익스텐션이 그러한 기능을 제공한다.
+- ESLint 익스텐션을 설치한다.
+- 저장할때 자동으로 ESLint를 검사하는 방법으론 설정에서 `settings.json`에 추가한다.
+<pre>
+{
+    // 저장할 떄 eslint로 고친다.
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true 
+    }
+}
+</pre>

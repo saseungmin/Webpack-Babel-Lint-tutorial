@@ -2,7 +2,15 @@
 
 //new Promise();
 
-var foo = "";
+//var foo = "";
 
 console.log();
 //(function() {})();
+
+// function abc() {
+//   if (true) {
+//     const a = 123;
+//   }
+// }
+
+// abc();

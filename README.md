@@ -32,3 +32,4 @@
 ### ✌ [Lint](https://github.com/saseungmin/Webpack-Babel-Lint-tutorial/blob/master/webpack-study/Lint.md)
 - ESLint
 - Prettier
+- 자동화
