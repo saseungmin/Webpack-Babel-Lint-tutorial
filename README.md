@@ -33,3 +33,6 @@
 - ESLint
 - Prettier
 - 자동화
+
+### ✌️[webpack 심화](https://github.com/saseungmin/Webpack-Babel-Lint-tutorial/blob/master/webpack-study/webpackDeepening.md)
+- webpack-dev-server

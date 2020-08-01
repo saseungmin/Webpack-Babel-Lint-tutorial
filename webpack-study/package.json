@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "lint": "eslint src --fix",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server --progress"
   },
   "author": "seungmin",
   "license": "ISC",

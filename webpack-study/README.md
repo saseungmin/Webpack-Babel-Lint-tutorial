@@ -8,6 +8,7 @@
 ### 🌈 [2. 플러그인](https://github.com/saseungmin/Webpack-Babel-Lint-tutorial/blob/master/webpack-study/Plugin.md)
 ### 🌈 [3. 바벨(babel) & 폴리필(polyfill)](https://github.com/saseungmin/Webpack-Babel-Lint-tutorial/blob/master/webpack-study/Babel-polyfill.md)
 ### 🌈 [4. 린트(Lint)](https://github.com/saseungmin/Webpack-Babel-Lint-tutorial/blob/master/webpack-study/Lint.md)
+### 🌈 [5. webpack(심화)](https://github.com/saseungmin/Webpack-Babel-Lint-tutorial/blob/master/webpack-study/webpackDeepening.md)
 
 <hr/>
 
