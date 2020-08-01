@@ -3,8 +3,7 @@ module.exports = {
         //'./my-babel-preset.js'
         ['@babel/preset-env', {
             targets: {
-                chrome: '79', 
-                ie: '11'
+                chrome: '79',
             },
             // useBuiltIns: 'usage' ie에서 인식하지 못하는것을 바꿔준다.
             useBuiltIns: 'usage', // 'entry' false 폴리필 사용 방식 지정
