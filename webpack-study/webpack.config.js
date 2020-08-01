@@ -56,8 +56,8 @@ module.exports = {
       },
       {
         test: /\.js$/, // .js로 끝나는 파일
-        loader: "babel-loader",
         exclude: /node-modules/, // node-modules에 있는 .js 파일들은 제외시킨다.
+        loader: "babel-loader",
       },
     ],
   },
