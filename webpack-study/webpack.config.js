@@ -9,6 +9,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // mini css extract plugin
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// connect-api-mocker 목업 API
+const apiMocker = require("connect-api-mocker");
 
 module.exports = {
   mode: "development",
@@ -24,6 +26,11 @@ module.exports = {
   devServer: {
     overlay: true,
     stats: "errors-only",
+    // 웹팩 개발 서버 객체를 받는다.
+    before: (app) => {
+      // 미들웨어를 추가하는 형식
+      app.use(apiMocker("/api", "mocks/api"));
+    },
   },
   module: {
     rules: [
