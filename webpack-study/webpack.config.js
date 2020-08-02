@@ -31,6 +31,7 @@ module.exports = {
       // 미들웨어를 추가하는 형식
       app.use(apiMocker("/api", "mocks/api"));
     },
+    hot: true,
   },
   module: {
     rules: [

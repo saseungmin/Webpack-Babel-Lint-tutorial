@@ -37,3 +37,4 @@
 ### ✌️[webpack 심화](https://github.com/saseungmin/Webpack-Babel-Lint-tutorial/blob/master/webpack-study/webpackDeepening.md)
 - webpack-dev-server
 - API 서버 연동(connect-api-mocker)
+- 핫 모듈 리플레이스먼트(HMR)

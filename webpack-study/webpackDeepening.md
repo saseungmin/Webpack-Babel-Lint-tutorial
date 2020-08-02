@@ -1,6 +1,8 @@
 # ✌ 웹팩(심화)
 > https://jeonghwan-kim.github.io/series/2020/01/02/frontend-dev-env-webpack-intermediate.html
 > https://webpack.js.org/configuration/dev-server/
+### 🔸 [API 서버 연동](https://github.com/saseungmin/Webpack-Babel-Lint-tutorial/blob/master/webpack-study/API%EC%84%9C%EB%B2%84%EC%97%B0%EB%8F%99.md)
+
 ## 🌈 웹팩 개발 서버
 - 프론트 엔드 개발환경에서 개발 서버를 제공해 주는 것이  [webpack-dev-server](https://webpack.js.org/configuration/dev-server/)이다.
 - 운영환경과 맞춤으로써 배포시 잠재적인 문제를 미리 확인할 수 있다. 계다가 ajax 방식의 API 연동은 cors정책 때문에 반드시 서버가 필요하다.
