@@ -38,3 +38,9 @@
 - webpack-dev-server
 - API 서버 연동(connect-api-mocker)
 - 핫 모듈 리플레이스먼트(HMR)
+- 최적화
+    - production 모드
+    - optimazation 속성으로 최적화
+    - 코드 스플리팅
+    - 다이나믹 임포트
+    - externals
