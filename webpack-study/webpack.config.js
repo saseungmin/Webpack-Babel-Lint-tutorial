@@ -11,12 +11,21 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 // connect-api-mocker 목업 API
 const apiMocker = require("connect-api-mocker");
+// process.env.NODE_ENV가 production일 때 css 압축
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+// process.env.NODE_ENV가 production일 때 콘솔 로그 삭제, 자바스크립트 코드를 난독화하고 debugger 구문을 제거
+const TerserPlugin = require("terser-webpack-plugin");
+// 웹팩에서 파일 복사
+const CopyPlugin = require("copy-webpack-plugin");
+
+const mode = process.env.NODE_ENV || "development";
 
 module.exports = {
-  mode: "development",
+  mode,
   entry: {
     // 시작점
     main: "./src/app.js",
+    //result: "./src/result.js",
   },
   output: {
     // 두가지 인자가 온다
@@ -32,6 +41,28 @@ module.exports = {
       app.use(apiMocker("/api", "mocks/api"));
     },
     hot: true,
+  },
+  optimization: {
+    minimizer:
+      mode == "production"
+        ? [
+            new OptimizeCssAssetsPlugin(),
+            new TerserPlugin({
+              terserOptions: {
+                compress: {
+                  drop_console: true, // 콘솔로그를 제거한다.
+                },
+              },
+            }),
+          ]
+        : [],
+    // splitChunks: {
+    //   chunks: "all", // 중복된 코드를 제거하고 엔트리 포인트를 다시 빌드한다.
+    // },
+  },
+  // 웹팩으로 빌드할 때 axios 모듈을 사용하는 부분이 있으면 전역변수 axios를 사용하는 것으로 간주하라는 의미이다.
+  externals: {
+    axios: "axios",
   },
   module: {
     rules: [
@@ -106,5 +137,13 @@ module.exports = {
     ...(process.env.NODE_ENV === "production"
       ? [new MiniCssExtractPlugin({ filename: "[name].css" })]
       : []),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "./node_modules/axios/dist/axios.min.js", // 여기있는 파일을
+          to: "./axios.min.js", //여기로 가져온다.
+        },
+      ],
+    }),
   ],
 };

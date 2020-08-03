@@ -34,6 +34,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   resultEl = document.createElement("div");
   resultEl.innerHTML = await result.render();
   document.body.appendChild(resultEl);
+
+  // 다이나믹 임포트 방법
+  // import(/* webpackChunkName: "result" */ "./result.js").then(async (m) => {
+  //   const result = m.default;
+  //   resultEl = document.createElement("div");
+  //   resultEl.innerHTML = await result.render();
+  //   document.body.appendChild(resultEl);
+  // });
 });
 
 // hmr을 켜면 module.hot에 값이 들어온다.
