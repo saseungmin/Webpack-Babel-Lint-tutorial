@@ -4,7 +4,7 @@
 // console.log(math.sum(1, 2));
 
 // --loader
-import axios from "axios";
+//import axios from "axios";
 import "./app.css";
 import "./app.scss";
 import woowa from "./woowa.PNG";
@@ -15,8 +15,8 @@ let resultEl;
 let formEl;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const res = await axios.get("/api/users");
-  console.log(res);
+  // const res = await axios.get("/api/users");
+  // console.log(res);
 
   document.getElementById("woo").innerHTML = `
         <img src="${woowa}" />
@@ -45,19 +45,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // hmr을 켜면 module.hot에 값이 들어온다.
-if (module.hot) {
-  console.log("핫 모듈 켜짐");
+// if (module.hot) {
+//   console.log("핫 모듈 켜짐");
 
-  module.hot.accept("./result", async () => {
-    console.log("result 모듈 변경됨.");
-    resultEl.innerHTML = await result.render();
-  });
+//   module.hot.accept("./result", async () => {
+//     console.log("result 모듈 변경됨.");
+//     resultEl.innerHTML = await result.render();
+//   });
 
-  module.hot.accept("./form", async () => {
-    console.log("form 모듈 변경됨.");
-    formEl.innerHTML = form.render();
-  });
-}
+//   module.hot.accept("./form", () => {
+//     console.log("form 모듈 변경됨.");
+//     formEl.innerHTML = form.render();
+//   });
+// }
 
 console.log(process.env.NODE_ENV);
 console.log(TWO); // 2
